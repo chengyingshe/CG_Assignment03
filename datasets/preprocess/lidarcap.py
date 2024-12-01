@@ -55,6 +55,9 @@ def get_sorted_filenames_by_index(dirname, isabs=True):
 
 
 def parse_json(json_filename):
+    """Parse json file
+    
+    """
     with open(json_filename) as f:
         content = json.load(f)
         beta = np.array(content['beta'], dtype=np.float32)

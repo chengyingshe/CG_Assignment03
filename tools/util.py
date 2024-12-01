@@ -85,7 +85,7 @@ def save_smpl_ply(vertices, filename):
     if vertices.ndim == 3:
         assert vertices.shape[0] == 1
         vertices = vertices.squeeze(0)
-    model_file = 'data/lidarcap/smpl/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
+    model_file = 'data/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
     with open(model_file, 'rb') as f:
         smpl_model = pickle.load(f, encoding='iso-8859-1')
         face_index = smpl_model['f'].astype(np.int64)

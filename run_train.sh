@@ -1,0 +1,2 @@
+python train.py --bs 8 --eval_bs 8 --gpu 0 1 --threads 16 --dataset lidarcap --name lidarcap-train
+# python train.py --threads 4 --gpu 0 --dataset lidarcap --ckpt_path best-train-loss21.pth --eval --eval_bs 4 --debug  # eval

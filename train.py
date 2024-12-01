@@ -37,9 +37,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # bs
-    parser.add_argument('--bs', type=int, default=2,
+    parser.add_argument('--bs', type=int, default=16,
                         help='input batch size for training (default: 24)')
-    parser.add_argument('--eval_bs', type=int, default=16,
+    parser.add_argument('--eval_bs', type=int, default=4,
                         help='input batch size for evaluation')
     # threads
     parser.add_argument('--threads', type=int, default=4,
@@ -73,6 +73,7 @@ if __name__ == '__main__':
     # wandb
     parser.add_argument('--project', type=str, default='lidarcap')
     parser.add_argument('--entity', type=str, default=None)
+    parser.add_argument('--name', type=str, default='lidarcap-scy')
 
     args = parser.parse_args()
 
@@ -81,7 +82,7 @@ if __name__ == '__main__':
 
     wandb.init(project=args.project, 
                entity=args.entity,
-               name='lidarcap-scy')
+               name=args.name)
     
     wandb.config.update(args, allow_val_change=True)
     config = wandb.config
@@ -162,8 +163,9 @@ if __name__ == '__main__':
             pred_poses.append(rotation_matrix_to_axis_angle(torch.from_numpy(pred_rotmat.reshape(-1, 3, 3))).numpy().reshape((-1, 72)))
         pred_poses = np.stack(pred_poses)
 
-        test_dataset_filename = os.path.join(
-            DATASET_DIR, '{}_test.hdf5'.format(dataset_name))
+        # test_dataset_filename = os.path.join(DATASET_DIR, '{}_test.hdf5'.format(dataset_name))
+        test_dataset_filename = os.path.join(DATASET_DIR, '{}_test.hdf5'.format(dataset_name))
+        
         test_data = h5py.File(test_dataset_filename, 'r')
         gt_poses = test_data['pose'][:]
         metric.output_metric(pred_poses.reshape(-1, 72), gt_poses.reshape(-1, 72))
@@ -203,3 +205,27 @@ if __name__ == '__main__':
 
             # scheduler
             scheduler.step(train_loss_dict['loss'])
+
+
+"""
+Eval: lidarcap_test.hdf5 ids 15-30
+
+best-train-loss21.pth:
+    EVAL LOSS 0.04951025232610603
+    accel_error: 54.32553589344025
+    mpjpe: 104.52275723218918
+    pa_mpjpe: 81.23412728309631
+    pve: 131.87551498413086
+    pck_30: 0.789907986111111
+    pck_50: 0.9076371527777778
+    
+best-train-loss.pth(自己训练的模型，epoch=79)：
+    EVAL LOSS 0.02669398682786429
+    accel_error: 42.42551326751709
+    mpjpe: 66.80289655923843
+    pa_mpjpe: 55.75178936123848
+    pve: 85.02522855997086
+    pck_30: 0.9008229166666667
+    pck_50: 0.966013888888889
+
+"""

@@ -27,7 +27,6 @@ mpp.Pool.istarmap = istarmap
 # 缺省参数全部都在后面
 def multi_func(func, max_process_num, total, desc, unzip, *args):
     # args is a tuple
-    print('####args:', args)
     assert len(args) > 0 and len(args[0]) > 0
     from tqdm import tqdm
     multi_param = len(args) > 1
